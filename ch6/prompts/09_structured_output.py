@@ -4,9 +4,10 @@ response_formatパラメータで期待される出力形式を定義し、
 OpenAI APIで構造化出力を取得する。
 
 実行: make structured
-前提: OPENAI_API_KEYが設定されていること
+前提: Azure OpenAI の認証情報が設定されていること
 """
 
+import os
 from typing import List
 
 import mlflow
@@ -15,6 +16,9 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 
 load_dotenv()
+
+LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+AZURE_OPENAI_API_VERSION = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21")
 
 mlflow.set_tracking_uri("http://localhost:5000")
 
@@ -35,8 +39,8 @@ print(f"プロンプト '{prompt.name}' (version {prompt.version}) を登録し�
 
 loaded = mlflow.genai.load_prompt("prompts:/qa-prompt@latest")
 
-response = openai.OpenAI().beta.chat.completions.parse(
-    model="gpt-4o-mini",
+response = openai.AzureOpenAI(api_version=AZURE_OPENAI_API_VERSION).beta.chat.completions.parse(
+    model=LLM_MODEL,
     messages=[
         {
             "role": "user",

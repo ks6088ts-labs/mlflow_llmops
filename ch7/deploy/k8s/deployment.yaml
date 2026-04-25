@@ -26,12 +26,19 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            # APIキー（Kubernetes Secretから取得）
-            - name: OPENAI_API_KEY
+            # APIキー（Kubernetes Secretから取得 / Azure OpenAI）
+            - name: AZURE_OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: llm-api-keys
-                  key: openai-api-key
+                  key: azure-openai-api-key
+            - name: AZURE_OPENAI_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: llm-api-keys
+                  key: azure-openai-endpoint
+            - name: AZURE_OPENAI_API_VERSION
+              value: "2024-10-21"
             - name: EXA_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -45,9 +52,9 @@ spec:
               value: "true"
             - name: OTEL_SERVICE_NAME
               value: "qa-agent-production"
-            # モデル設定
+            # モデル設定（Azure OpenAI のデプロイ名）
             - name: LLM_MODEL
-              value: "gpt-4o-mini"
+              value: "gpt-5"
             - name: EMBEDDING_MODEL
               value: "text-embedding-3-small"
           resources:

@@ -13,7 +13,7 @@
 ## 前提条件
 
 - Python 3.11以上
-- OpenAI APIキー
+- Azure OpenAI のリソース（APIキー・エンドポイント・モデルのデプロイ）
 
 ## 環境変数の設定
 
@@ -33,7 +33,7 @@ pip install notebook
 jupyter notebook
 ```
 
-各ノートブック冒頭の `%pip install` セルで依存パッケージがインストールされます。`YOUR_API_KEY` を実際のOpenAI APIキーに置き換えてから実行してください。
+各ノートブック凒頭の `%pip install` セルで依存パッケージがインストールされます。`YOUR_API_KEY` / `YOUR_ENDPOINT` を実際の Azure OpenAI の認証情報に置き換えてから実行してください。
 
 MLflow Tracking Serverはローカルで起動しておく必要があります。
 

@@ -16,7 +16,7 @@ load_dotenv()
 import mlflow
 import os
 import uuid
-from openai import OpenAI
+from openai import AzureOpenAI
 
 # === 1. 本番向け設定 ===
 # 非同期ログ記録を有効化(本番環境推奨)
@@ -26,10 +26,13 @@ os.environ["OTEL_SERVICE_NAME"] = "qa-agent"
 # エクスペリメントの設定
 mlflow.set_experiment("ch8-monitoring-quickstart")
 
-# OpenAI自動トレーシングを有効化
+# Azure OpenAI 自動トレーシングを有効化
 mlflow.openai.autolog()
 
-client = OpenAI()
+LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+client = AzureOpenAI(
+    api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21"),
+)
 
 
 # === 2. メタデータ付きのLLM呼び出し ===
@@ -47,7 +50,7 @@ def handle_request(message: str, user_id: str, session_id: str) -> str:
     )
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=LLM_MODEL,
         messages=[
             {
                 "role": "system",

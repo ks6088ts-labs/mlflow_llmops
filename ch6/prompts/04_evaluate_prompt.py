@@ -7,8 +7,10 @@ Prompt Registryに登録したプロンプトのバージョンごとに評価�
 エージェント統合版の評価はch5のサンプルコードを参照。
 
 実行: make eval
-前提: 02_version_update.pyを実行済み、OPENAI_API_KEYが設定されていること
+前提: 02_version_update.pyを実行済み、Azure OpenAI の認証情報が設定されていること
 """
+
+import os
 
 import mlflow
 import openai
@@ -16,6 +18,13 @@ from dotenv import load_dotenv
 from mlflow.genai.scorers import scorer
 
 load_dotenv()
+
+LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+AZURE_OPENAI_API_VERSION = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21")
+
+
+def _client() -> openai.AzureOpenAI:
+    return openai.AzureOpenAI(api_version=AZURE_OPENAI_API_VERSION)
 
 mlflow.set_tracking_uri("http://localhost:5000")
 mlflow.set_experiment("プロンプト評価")
@@ -33,8 +42,8 @@ def create_predict_fn(prompt_version: str):
         prompt = mlflow.genai.load_prompt(
             f"prompts:/qa-agent-system-prompt/{prompt_version}"
         )
-        completion = openai.OpenAI().chat.completions.create(
-            model="gpt-4o-mini",
+        completion = _client().chat.completions.create(
+            model=LLM_MODEL,
             messages=[
                 {"role": "system", "content": prompt.template},
                 {"role": "user", "content": question},
@@ -50,8 +59,8 @@ def create_predict_fn(prompt_version: str):
 def answer_quality(inputs, outputs, expectations):
     """回答が期待される内容をカバーしているか評価する。"""
     expected = expectations.get("expected_answer", "")
-    response = openai.OpenAI().chat.completions.create(
-        model="gpt-4o-mini",
+    response = _client().chat.completions.create(
+        model=LLM_MODEL,
         messages=[
             {
                 "role": "user",

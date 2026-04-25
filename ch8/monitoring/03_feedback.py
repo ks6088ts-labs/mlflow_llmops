@@ -13,14 +13,19 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import os
+
 import mlflow
-from openai import OpenAI
+from openai import AzureOpenAI
 from mlflow.entities import AssessmentSource, AssessmentSourceType
 
 mlflow.set_experiment("ch8-monitoring-quickstart")
 mlflow.openai.autolog()
 
-client = OpenAI()
+LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+client = AzureOpenAI(
+    api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21"),
+)
 
 # === 1. LLM呼び出し(フィードバック対象のトレースを生成) ===
 print("=== フィードバック対象のトレース生成 ===\n")
@@ -49,7 +54,7 @@ questions_and_feedback = [
 for item in questions_and_feedback:
     # LLM呼び出し
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=LLM_MODEL,
         messages=[
             {"role": "system", "content": "あなたはMLflowの専門家です。"},
             {"role": "user", "content": item["question"]},

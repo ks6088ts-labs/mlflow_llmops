@@ -20,7 +20,7 @@
 
 - Python 3.10以上
 - uv（パッケージマネージャー）
-- OpenAI APIキー（04以降で必要）
+- Azure OpenAI のリソース（APIキー・エンドポイント・モデルのデプロイ、04以降で必要）
 
 ### インストール
 
@@ -46,7 +46,10 @@ cp .env.template .env
 
 | 環境変数 | 用途 | 必須 |
 |---------|------|------|
-| `OPENAI_API_KEY` | LLM呼び出し（評価・最適化・構造化出力） | 04以降で必要 |
+| `AZURE_OPENAI_API_KEY` | Azure OpenAI のAPIキー | 04以降で必要 |
+| `AZURE_OPENAI_ENDPOINT` | Azure OpenAI のエンドポイント (例: `https://<resource>.openai.azure.com/`) | 04以降で必要 |
+| `AZURE_OPENAI_API_VERSION` | Azure OpenAI のAPIバージョン (例: `2024-10-21`) | 04以降で必要 |
+| `LLM_MODEL` | Chatモデルのデプロイ名 | 04以降で必要 |
 
 ### MLflow Tracking Serverの起動
 
@@ -82,7 +85,7 @@ development/productionエイリアスの設定と@latestの確認を行います
 make alias
 ```
 
-#### 6.3節: プロンプトの評価（OPENAI_API_KEY必要）
+#### 6.3節: プロンプトの評価（Azure OpenAI 必要）
 
 v1とv2のプロンプトをそれぞれ評価し、改善効果を定量比較します。
 
@@ -90,7 +93,7 @@ v1とv2のプロンプトをそれぞれ評価し、改善効果を定量比較�
 make eval
 ```
 
-### 応用（OPENAI_API_KEY必要）
+### 応用（Azure OpenAI 必要）
 
 #### 6.3.4節: MetaPromptによる構造改善
 
@@ -124,7 +127,7 @@ make deploy
 make model-config
 ```
 
-#### 6.2.7節: 構造化出力（OPENAI_API_KEY必要）
+#### 6.2.7節: 構造化出力（Azure OpenAI 必要）
 
 Pydanticモデルで出力形式を定義し、OpenAI APIで構造化出力を取得します。
 
@@ -148,12 +151,12 @@ make all
 | `make register` | プロンプトの登録 | 6.2 |
 | `make version` | バージョン更新（改善版プロンプト） | 6.2 |
 | `make alias` | エイリアスによるライフサイクル管理 | 6.2 |
-| `make eval` | v1 vs v2の評価比較（OPENAI_API_KEY必要） | 6.3 |
-| `make optimize-meta` | MetaPromptによる構造改善（OPENAI_API_KEY必要） | 6.3.4 |
-| `make optimize-gepa` | GEPAによる反復最適化（OPENAI_API_KEY必要） | 6.3.4 |
+| `make eval` | v1 vs v2の評価比較（Azure OpenAI 必要） | 6.3 |
+| `make optimize-meta` | MetaPromptによる構造改善（Azure OpenAI 必要） | 6.3.4 |
+| `make optimize-gepa` | GEPAによる反復最適化（Azure OpenAI 必要） | 6.3.4 |
 | `make deploy` | 段階的デプロイとロールバック | 6.3.2 |
 | `make model-config` | モデルパラメータの紐付け | 6.2.6 |
-| `make structured` | 構造化出力（OPENAI_API_KEY必要） | 6.2.7 |
+| `make structured` | 構造化出力（Azure OpenAI 必要） | 6.2.7 |
 | `make all` | 基本フロー + deploy + model-config + structured | - |
 | `make clean` | MLflowデータを削除 | - |
 

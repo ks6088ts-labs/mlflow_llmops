@@ -14,23 +14,29 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import os
+
 import mlflow
 from mlflow import MlflowClient
-from openai import OpenAI
+from openai import AzureOpenAI
 from cost_calculator import calculate_cost
 
 mlflow.set_experiment("ch8-monitoring-quickstart")
 mlflow.openai.autolog()
 
-client = OpenAI()
+LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+client = AzureOpenAI(
+    api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21"),
+)
 mlflow_client = MlflowClient()
 
 # === 1. 異なるモデルでLLM呼び出し ===
+# 注: Azure OpenAI では model にデプロイ名を指定する
 models_and_prompts = [
-    ("gpt-4o-mini", "Pythonのデコレータを簡潔に説明してください。"),
-    ("gpt-4o-mini", "MLflowのトレーシング機能について、主な利点を3つ挙げてください。"),
+    (LLM_MODEL, "Pythonのデコレータを簡潔に説明してください。"),
+    (LLM_MODEL, "MLflowのトレーシング機能について、主な利点を3つ挙げてください。"),
     (
-        "gpt-4o-mini",
+        LLM_MODEL,
         "RAGシステムの品質評価で重要な指標は何ですか?詳しく説明してください。",
     ),
 ]

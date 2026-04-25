@@ -8,7 +8,7 @@ from pathlib import Path
 
 from langchain.tools import tool
 from langchain_milvus import Milvus
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings
 from pymilvus import connections
 
 import os
@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 
 # AsyncMilvusClient初期化時の警告を抑制（同期処理のみ使用するため影響なし）
 logging.getLogger("langchain_milvus").setLevel(logging.ERROR)
+# Milvus Liteはasync接続をサポートしないため、pymilvusのconnection失敗ログも抑制
+logging.getLogger("pymilvus").setLevel(logging.CRITICAL)
 
 DB_PATH = Path("data") / "milvus.db"
 
@@ -76,12 +78,15 @@ def _get_retriever():
     if not DB_PATH.exists():
         return None
 
-    embeddings = OpenAIEmbeddings(model=os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small"))
+    embeddings = AzureOpenAIEmbeddings(
+        azure_deployment=os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small"),
+        api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21"),
+    )
 
-    # Milvusベクトルストアに接続
+    # Milvusベクトルストアに接続（Milvus Liteは絶対パスのURIが必要）
     vectorstore = Milvus(
         embedding_function=embeddings,
-        connection_args={"uri": str(DB_PATH)},
+        connection_args={"uri": str(DB_PATH.resolve())},
         collection_name="mlflow_docs",
     )
     # 上位5件を返すリトリーバーを作成

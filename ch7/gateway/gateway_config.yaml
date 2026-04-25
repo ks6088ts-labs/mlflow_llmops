@@ -17,16 +17,21 @@
 # 参考:
 #   新AI Gateway: https://mlflow.org/docs/latest/genai/governance/ai-gateway/
 #   Legacy方式: https://mlflow.org/docs/latest/genai/governance/ai-gateway/legacy/
+#   Azure OpenAI: https://mlflow.org/docs/latest/genai/governance/ai-gateway/legacy/configurations#azure-openai
 
 endpoints:
-  # QAエージェントのLLMバックエンド
+  # QAエージェントのLLMバックエンド（Azure OpenAI）
   - name: qa-agent-llm
     endpoint_type: llm/v1/chat
     model:
       provider: openai
-      name: gpt-4o-mini
+      name: gpt-5  # Azure OpenAI のデプロイ名
       config:
-        openai_api_key: $OPENAI_API_KEY
+        openai_api_type: azure
+        openai_api_key: $AZURE_OPENAI_API_KEY
+        openai_api_base: $AZURE_OPENAI_ENDPOINT
+        openai_deployment_name: gpt-5
+        openai_api_version: 2024-10-21
     limit:
       renewal_period: minute
       calls: 100
@@ -36,9 +41,13 @@ endpoints:
     endpoint_type: llm/v1/embeddings
     model:
       provider: openai
-      name: text-embedding-3-small
+      name: text-embedding-3-small  # Azure OpenAI のデプロイ名
       config:
-        openai_api_key: $OPENAI_API_KEY
+        openai_api_type: azure
+        openai_api_key: $AZURE_OPENAI_API_KEY
+        openai_api_base: $AZURE_OPENAI_ENDPOINT
+        openai_deployment_name: text-embedding-3-small
+        openai_api_version: 2024-10-21
 
   # フォールバック用のバックアップLLM（利用する場合はコメントを解除してください）
   # - name: qa-agent-llm-backup

@@ -34,7 +34,11 @@ cp .env.template .env
 `.env` を編集して API キーを入力してください。
 
 ```
-OPENAI_API_KEY=your-api-key-here
+AZURE_OPENAI_API_KEY=your-api-key-here
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_API_VERSION=2024-10-21
+LLM_MODEL=gpt-5
+EMBEDDING_MODEL=text-embedding-3-small
 EXA_API_KEY=your-exa-api-key-here
 ```
 

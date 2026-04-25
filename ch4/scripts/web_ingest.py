@@ -31,7 +31,7 @@ import scrapy
 import tiktoken
 from langchain_core.documents import Document
 from langchain_milvus import Milvus
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings
 from scrapy.crawler import CrawlerProcess
 
 # ノイズの多いロガーを抑制
@@ -287,7 +287,10 @@ def ingest_url(base_url: str, db_path: Path, chunk_size: int, max_pages: int | N
         return 0
 
     # Milvusに保存
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    embeddings = AzureOpenAIEmbeddings(
+        azure_deployment=os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small"),
+        api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21"),
+    )
     Milvus.from_documents(
         documents=all_documents,
         embedding=embeddings,

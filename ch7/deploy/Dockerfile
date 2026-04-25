@@ -3,7 +3,9 @@
 # 使用方法:
 #   docker build -t qa-agent-server -f deploy/Dockerfile .
 #   docker run -p 5005:8080 \
-#       -e OPENAI_API_KEY=$OPENAI_API_KEY \
+#       -e AZURE_OPENAI_API_KEY=$AZURE_OPENAI_API_KEY \
+#       -e AZURE_OPENAI_ENDPOINT=$AZURE_OPENAI_ENDPOINT \
+#       -e AZURE_OPENAI_API_VERSION=$AZURE_OPENAI_API_VERSION \
 #       -e EXA_API_KEY=$EXA_API_KEY \
 #       -e MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI \
 #       qa-agent-server
@@ -42,8 +44,9 @@ COPY data/ data/
 ENV MLFLOW_TRACKING_URI=http://mlflow-server:5000
 ENV MLFLOW_ENABLE_ASYNC_TRACE_LOGGING=true
 ENV OTEL_SERVICE_NAME=qa-agent-production
-ENV LLM_MODEL=gpt-4o-mini
+ENV LLM_MODEL=gpt-5
 ENV EMBEDDING_MODEL=text-embedding-3-small
+ENV AZURE_OPENAI_API_VERSION=2024-10-21
 
 EXPOSE 8080
 

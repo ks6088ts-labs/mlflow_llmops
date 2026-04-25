@@ -14,7 +14,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, StateGraph
 from langgraph.graph.message import MessagesState
 from langgraph.prebuilt import ToolNode
-from langchain_openai import ChatOpenAI
+from langchain_openai import AzureChatOpenAI
 
 from agents.thread import Message, Thread
 from .tools import doc_search, web_search, open_url
@@ -72,7 +72,10 @@ class LangGraphAgent:
         Returns:
             コンパイル済みのLangGraphグラフ
         """
-        model = ChatOpenAI(model=os.environ.get("LLM_MODEL", "gpt-4o-mini"))
+        model = AzureChatOpenAI(
+            azure_deployment=os.environ.get("LLM_MODEL", "gpt-4o-mini"),
+            api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21"),
+        )
         # ツールがあればモデルにバインド
         model_with_tools = model.bind_tools(self.tools) if self.tools else model
 

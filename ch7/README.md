@@ -8,7 +8,7 @@
 
 - Python 3.10以上
 - [uv](https://docs.astral.sh/uv/) がインストール済みであること
-- OpenAI APIキー（`OPENAI_API_KEY`）
+- Azure OpenAI のリソース（`AZURE_OPENAI_API_KEY` / `AZURE_OPENAI_ENDPOINT` / Chat・Embeddingのデプロイ名）
 - Exa APIキー（`EXA_API_KEY`） - [exa.ai](https://exa.ai) で取得
 
 ## ディレクトリ構成
@@ -71,7 +71,7 @@ cp ../.env .env
 cp .env.template .env
 ```
 
-`.env` を編集して `OPENAI_API_KEY` と `EXA_API_KEY` を入力してください。
+`.env` を編集して Azure OpenAI の認証情報（`AZURE_OPENAI_API_KEY` / `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_VERSION` / `LLM_MODEL` / `EMBEDDING_MODEL`）と `EXA_API_KEY` を入力してください。
 
 ### 2. 依存関係のインストール
 
@@ -150,13 +150,13 @@ make log-model
 ステップ1で起動したTracking Serverには、AI Gatewayが組み込まれています。
 
 1. ブラウザで http://localhost:5000/#/gateway にアクセス
-2. **API Keys** タブで OpenAI APIキーを登録:
-   - 名前: `openai-key`
-   - プロバイダー: OpenAI
-   - APIキーの値を入力
+2. **API Keys** タブで Azure OpenAI のAPIキーを登録:
+   - 名前: `azure-openai-key`
+   - プロバイダー: OpenAI (Azure)
+   - APIキーの値とエンドポイントを入力
 3. **Endpoints** タブでエンドポイントを作成:
-   - `qa-agent-llm` — OpenAI / gpt-4o-mini / openai-key
-   - `qa-agent-embedding` — OpenAI / text-embedding-3-small / openai-key
+   - `qa-agent-llm` — Azure OpenAI / `gpt-5`（デプロイ名）/ azure-openai-key
+   - `qa-agent-embedding` — Azure OpenAI / `text-embedding-3-small`（デプロイ名）/ azure-openai-key
 4. 動作確認:
 
 ```bash

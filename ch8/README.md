@@ -8,7 +8,7 @@
 
 - Python 3.11以上
 - uv (パッケージマネージャー)
-- OpenAI APIキー
+- Azure OpenAI のリソース（`AZURE_OPENAI_API_KEY` / `AZURE_OPENAI_ENDPOINT` / Chat・Embeddingのデプロイ名）
 
 ### 環境変数の設定
 

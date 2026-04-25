@@ -8,9 +8,10 @@ GEPA(Gradient-free Evolutionary Prompt Alignment)はリフレクションを使�
       max_metric_callsで呼び出し回数を制限すること。
 
 実行: make optimize-gepa
-前提: 01_register_prompt.pyを実行済み、OPENAI_API_KEYが設定されていること
+前提: 01_register_prompt.pyを実行済み、Azure OpenAI の認証情報が設定されていること
 """
 
+import os
 import time
 
 import mlflow
@@ -21,6 +22,13 @@ from mlflow.genai.scorers import scorer
 
 load_dotenv()
 
+LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+AZURE_OPENAI_API_VERSION = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21")
+
+
+def _client() -> openai.AzureOpenAI:
+    return openai.AzureOpenAI(api_version=AZURE_OPENAI_API_VERSION)
+
 mlflow.set_tracking_uri("http://localhost:5000")
 mlflow.set_experiment("プロンプト最適化 - GEPA")
 
@@ -29,8 +37,8 @@ from data.eval_dataset import EVAL_DATA
 
 def predict_fn(question: str) -> str:
     prompt = mlflow.genai.load_prompt("prompts:/qa-agent-system-prompt@latest")
-    completion = openai.OpenAI().chat.completions.create(
-        model="gpt-4o-mini",
+    completion = _client().chat.completions.create(
+        model=LLM_MODEL,
         messages=[
             {"role": "system", "content": prompt.template},
             {"role": "user", "content": question},
@@ -42,8 +50,8 @@ def predict_fn(question: str) -> str:
 @scorer
 def answer_quality(inputs, outputs, expectations):
     expected = expectations.get("expected_answer", "")
-    response = openai.OpenAI().chat.completions.create(
-        model="gpt-4o-mini",
+    response = _client().chat.completions.create(
+        model=LLM_MODEL,
         messages=[
             {
                 "role": "user",
@@ -71,7 +79,7 @@ result = mlflow.genai.optimize_prompts(
     train_data=EVAL_DATA,
     prompt_uris=["prompts:/qa-agent-system-prompt@latest"],
     optimizer=GepaPromptOptimizer(
-        reflection_model="openai:/gpt-4o",
+        reflection_model=f"openai:/{LLM_MODEL}",
         max_metric_calls=10,
     ),
     scorers=[answer_quality],

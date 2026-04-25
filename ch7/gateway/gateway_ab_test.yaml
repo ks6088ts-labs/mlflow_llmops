@@ -18,26 +18,38 @@ endpoints:
     endpoint_type: llm/v1/chat
     model:
       provider: openai
-      name: gpt-4o-mini
+      name: gpt-5  # Azure OpenAI のデプロイ名
       config:
-        openai_api_key: $OPENAI_API_KEY
+        openai_api_type: azure
+        openai_api_key: $AZURE_OPENAI_API_KEY
+        openai_api_base: $AZURE_OPENAI_ENDPOINT
+        openai_deployment_name: gpt-5
+        openai_api_version: 2024-10-21
 
   - name: qa-agent-llm-candidate
     endpoint_type: llm/v1/chat
     model:
       provider: openai
-      name: gpt-4.1
+      name: gpt-4.1  # Azure OpenAI のデプロイ名
       config:
-        openai_api_key: $OPENAI_API_KEY
+        openai_api_type: azure
+        openai_api_key: $AZURE_OPENAI_API_KEY
+        openai_api_base: $AZURE_OPENAI_ENDPOINT
+        openai_deployment_name: gpt-4.1
+        openai_api_version: 2024-10-21
 
   # Embedding（A/Bテスト対象外）
   - name: qa-agent-embedding
     endpoint_type: llm/v1/embeddings
     model:
       provider: openai
-      name: text-embedding-3-small
+      name: text-embedding-3-small  # Azure OpenAI のデプロイ名
       config:
-        openai_api_key: $OPENAI_API_KEY
+        openai_api_type: azure
+        openai_api_key: $AZURE_OPENAI_API_KEY
+        openai_api_base: $AZURE_OPENAI_ENDPOINT
+        openai_deployment_name: text-embedding-3-small
+        openai_api_version: 2024-10-21
 
 # トラフィック分割ルーティング
 routes:
