@@ -18,7 +18,7 @@ MLflowドキュメントを検索ソースとしたQAエージェントの実装
 
 - Python 3.10以上
 - uv（パッケージマネージャー）
-- OpenAI APIキー
+- Azure OpenAI のリソース（APIキー・エンドポイント・モデルのデプロイ）
 - Exa APIキー（Web検索を使用する場合）
 
 ### インストール
@@ -45,7 +45,11 @@ cp .env.template .env
 
 | 環境変数 | 用途 | 必須 |
 |---------|------|------|
-| `OPENAI_API_KEY` | LLM呼び出し・Embedding | はい |
+| `AZURE_OPENAI_API_KEY` | Azure OpenAI のAPIキー | はい |
+| `AZURE_OPENAI_ENDPOINT` | Azure OpenAI のエンドポイント (例: `https://<resource>.openai.azure.com/`) | はい |
+| `AZURE_OPENAI_API_VERSION` | Azure OpenAI のAPIバージョン (例: `2024-10-21`) | はい |
+| `LLM_MODEL` | Chatモデルのデプロイ名 | はい |
+| `EMBEDDING_MODEL` | Embeddingモデルのデプロイ名 | はい |
 | `EXA_API_KEY` | Web検索ツール | いいえ（`ENABLE_WEB_SEARCH=false`で無効化可） |
 
 ## 実行
