@@ -11,9 +11,9 @@ requires-python = ">=3.10"
 
 dependencies = [
     # LangGraph / LangChain
-    "langgraph>=1.0.0",
+    "langgraph>=1.0.10rc1",
     "langchain>=1.0.0",
-    "langchain-openai>=1.0.0",
+    "langchain-openai>=1.1.14",
     "langchain-community>=0.3.0",
     # ベクトルストア
     "langchain-milvus>=0.2.0,<0.3.0",
@@ -22,13 +22,13 @@ dependencies = [
     "setuptools<75",
     # ツール
     "exa-py>=1.0.0",
-    "requests>=2.31.0",
+    "requests>=2.33.0",
     # ユーティリティ
     "pydantic>=2.0.0",
-    "python-dotenv>=1.0.0",
+    "python-dotenv>=1.2.2",
     # データ取り込み
     "html2text>=2024.0.0",
-    "scrapy>=2.11.0",
+    "scrapy>=2.14.2",
     "tiktoken>=0.7.0",
 ]
 
